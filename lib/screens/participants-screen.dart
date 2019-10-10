@@ -54,7 +54,7 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
   @override
   Widget build(BuildContext context) {
     var appBar = appBarr();
-    final participantsM = Provider.of<Participans>(context, listen: false);
+    final participantsM = Provider.of<Participants>(context, listen: false);
     final height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         appBar.preferredSize.height;

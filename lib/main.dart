@@ -13,16 +13,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          builder: (ctx) => Participans(),
+          builder: (ctx) => Participants(),
         )
       ],
       child: MaterialApp(
-        theme: ThemeData(
-            textTheme: TextTheme(
+        /* theme: ThemeData(
+           textTheme: TextTheme(
           headline: TextStyle(color: Colors.white),
           title: TextStyle(color: Colors.white),
           body1: TextStyle(color: Colors.white),
-        )),
+        )
+        ),*/
         home: ParticipantsScreen(),
         routes: {
           EditParticipantScreen.routeName: (ctx) => EditParticipantScreen()

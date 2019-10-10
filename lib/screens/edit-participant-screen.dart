@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym/const.dart';
 import 'package:gym/providers/participant.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class EditParticipantScreen extends StatefulWidget {
   static const routeName = "/edit-participant";
@@ -14,8 +17,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
   var action = 'add';
   final form = GlobalKey<FormState>();
   var appBar;
-
-  Participant participant = null;
+  Participant participant;
 
   List<DropdownMenuItem> months() {
     List<DropdownMenuItem> months = [];
@@ -33,8 +35,11 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
   @override
   void didChangeDependencies() {
     if (isInit == false) {
-      participant = ModalRoute.of(context).settings.arguments as Participant;
-      if (participant != null) {
+      participant =
+          (ModalRoute.of(context).settings.arguments as Participant) == null
+              ? Participant()
+              : (ModalRoute.of(context).settings.arguments as Participant);
+      if (participant.id != null) {
         action = 'edit';
         selectedValue = participant.nbMonths();
       }
@@ -56,6 +61,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
     final height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         appBar.preferredSize.height;
+    final paraticipantsM = Provider.of<Participants>(context, listen: false);
     return Scaffold(
       backgroundColor: KmainColor,
       appBar: appBar,
@@ -88,10 +94,55 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                       child: ListView(
                         children: <Widget>[
                           TextFormField(
-                              initialValue:
-                                  participant == null ? null : participant.name,
-                              decoration:
-                                  kInputDecorationEdit('Le nom complete :')),
+                            initialValue: participant.name == null
+                                ? null
+                                : participant.name,
+                            decoration:
+                                kInputDecorationEdit('Le nom complete :'),
+                            validator: (v) {
+                              if (v.isEmpty)
+                                return 'Veuillez entrer un nom';
+                              else if (paraticipantsM.isAlreadyExist(v))
+                                return 'Ce nom existe déjà';
+                            },
+                            onSaved: (v) {
+                              participant = Participant(
+                                  id: participant.id,
+                                  name: v,
+                                  dateBegin: participant.dateBegin,
+                                  dateEnd: participant.dateEnd);
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          DateTimeField(
+                            validator: (v) {
+                              if (v.toString().isEmpty)
+                                return 'Veuillez entrer la date de début';
+                              else if (DateTime.tryParse(v.toString()) == null)
+                                return 'Veuillez enter un valid date';
+                            },
+                            initialValue: participant.dateBegin == null
+                                ? DateTime.now()
+                                : participant.dateBegin,
+                            decoration: kInputDecorationEdit("Date de début"),
+                            format: DateFormat("yyyy-MM-dd"),
+                            onShowPicker: (context, currentValue) {
+                              return showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(2100));
+                            },
+                            onSaved: (v) {
+                              participant = Participant(
+                                  id: participant.id,
+                                  name: participant.name,
+                                  dateBegin: v,
+                                  dateEnd: participant.dateEnd);
+                            },
+                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -102,6 +153,14 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                                   selectedValue = v;
                                 });
                               },
+                              onSaved: (v) {
+                                participant = Participant(
+                                    id: participant.id,
+                                    name: participant.name,
+                                    dateBegin: participant.dateBegin,
+                                    dateEnd: participant.dateBegin.add(
+                                        Duration(days: selectedValue * 30)));
+                              },
                               value: selectedValue,
                               decoration:
                                   kInputDecorationEdit('Le nombre des mois')),
@@ -109,7 +168,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                             height: 10,
                           ),
                           MaterialButton(
-                            onPressed: () {},
+                            onPressed: _save,
                             child: Text(
                               "Enregistrer",
                               style: TextStyle(color: Colors.white),
@@ -127,5 +186,13 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
         ),
       ),
     );
+  }
+
+  void _save() {
+    final bool validate = form.currentState.validate();
+    if (validate) {
+      form.currentState.save();
+      print(participant.dateEnd);
+    }
   }
 }
