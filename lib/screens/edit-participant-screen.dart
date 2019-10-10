@@ -17,6 +17,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
   var action = 'add';
   final form = GlobalKey<FormState>();
   var appBar;
+  bool isLoading = false;
   Participant participant;
 
   List<DropdownMenuItem> months() {
@@ -102,8 +103,16 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                             validator: (v) {
                               if (v.isEmpty)
                                 return 'Veuillez entrer un nom';
-                              else if (paraticipantsM.isAlreadyExist(v))
-                                return 'Ce nom existe déjà';
+                              else {
+                                if (action == 'add') {
+                                  if (paraticipantsM.isAlreadyExist(v)) {
+                                    return 'Ce nom existe déjà';
+                                  }
+                                } else if (paraticipantsM.isAlreadyExist(
+                                    v, participant.id)) {
+                                  return 'Ce nom existe déjà';
+                                }
+                              }
                             },
                             onSaved: (v) {
                               participant = Participant(
@@ -167,16 +176,22 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          MaterialButton(
-                            onPressed: _save,
-                            child: Text(
-                              "Enregistrer",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: KsecondColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                          )
+                          isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.yellow,
+                                  ),
+                                )
+                              : MaterialButton(
+                                  onPressed: _save,
+                                  child: Text(
+                                    "Enregistrer",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  color: KsecondColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                )
                         ],
                       ),
                     )),
@@ -188,11 +203,26 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
     );
   }
 
-  void _save() {
+  void _save() async {
     final bool validate = form.currentState.validate();
     if (validate) {
       form.currentState.save();
-      print(participant.dateEnd);
+      setState(() {
+        isLoading = true;
+      });
+      if (action == 'add') {
+        int status = await Provider.of<Participants>(context, listen: false)
+            .add(participant);
+        if (status == 200) {
+          showMsg('le participant été ajouté avec success');
+          Navigator.of(context).pop();
+        } else {
+          showMsg('Une erreur est survenue');
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-const url = "";
+import 'package:fluttertoast/fluttertoast.dart';
 
 const Color KmainColor = Color(0xff8d6ad4);
 const Color KsecondColor = Color(0xff513d7a);
@@ -44,4 +43,11 @@ InputDecoration kInputDecorationEdit(txt) {
       borderSide: BorderSide(color: Colors.white),
     ),
   );
+}
+
+const url = 'https://gym-ba9b1.firebaseio.com/';
+
+void showMsg(txt) {
+  Fluttertoast.showToast(
+      msg: txt, gravity: ToastGravity.BOTTOM, toastLength: Toast.LENGTH_SHORT);
 }
