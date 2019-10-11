@@ -3,7 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 const Color KmainColor = Color(0xff8d6ad4);
 const Color KsecondColor = Color(0xff513d7a);
-
+const apiKey = "AIzaSyDHaBAEUjDPaQ1jr4gG1w9KmmsVlHpJF8k";
+const errorMsg = "Une erreur est survenue";
 InputDecoration kInputSearch = InputDecoration(
   hintStyle: TextStyle(color: Colors.white),
   hintText: "Recherche",

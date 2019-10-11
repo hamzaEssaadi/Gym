@@ -91,7 +91,7 @@ class Participants with ChangeNotifier {
         _items.add(newParticipant);
         notifyListeners();
       }
-      print(response.body);
+
       return response.statusCode;
     } catch (e) {
       print(e.toString());
@@ -107,7 +107,7 @@ class Participants with ChangeNotifier {
           'dateBegin': participant.dateBegin.toIso8601String(),
           'dateEnd': participant.dateEnd.toIso8601String()
         }));
-    print(response.body);
+
     if (response.body.isEmpty) return 0;
     try {
       if (response.statusCode == 200) {
@@ -120,5 +120,36 @@ class Participants with ChangeNotifier {
       print(e.toString());
       return 1;
     }
+  }
+
+  Future<int> delete(String id) async {
+    var participant = _items.firstWhere((test) => test.id == id);
+    _items.removeWhere((test) => test.id == id);
+    notifyListeners();
+    try {
+      final path = url + 'participants/${participant.id}.json';
+      var response = await http.delete(path);
+      if (response.statusCode != 200) {
+        _items.add(participant);
+        notifyListeners();
+      }
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return -1;
+    }
+  }
+
+  void filter(String txt) async {
+    await fetchAndSet();
+    _items = _items
+        .where((test) => test.name.toLowerCase().contains(txt.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  List<Participant> passedParticipants() {
+    print(_items.where((test) => test.nbDaysRest() <= 0).toList().length);
+    return _items.where((test) => test.nbDaysRest() <= 0).toList();
   }
 }

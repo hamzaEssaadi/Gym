@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym/const.dart';
 import 'package:gym/providers/participant.dart';
 import 'package:gym/screens/participants-screen.dart';
@@ -19,9 +20,15 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         home: ParticipantsScreen(),
+        theme: ThemeData(primaryColor: KmainColor, accentColor: KmainColor),
         routes: {
           EditParticipantScreen.routeName: (ctx) => EditParticipantScreen()
         },
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [const Locale('en', 'EN'), const Locale('fr', 'FR')],
       ),
     );
   }

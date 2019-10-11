@@ -107,6 +107,9 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
                           margin:
                               EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           child: TextField(
+                            onSubmitted: (v) {
+                              participantsM.filter(v);
+                            },
                             decoration: kInputSearch,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -135,7 +138,7 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
                       ],
                     ),
             ),
-            FiltredParticipantScreen()
+            FiltredParticipantScreen(height)
           ],
         ),
       ),
