@@ -7,11 +7,14 @@ const Color KsecondColor = Color(0xff513d7a);
 InputDecoration kInputSearch = InputDecoration(
   hintStyle: TextStyle(color: Colors.white),
   hintText: "Recherche",
-  focusedBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.white),
+  alignLabelWithHint: true,
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(15),
+    borderSide: BorderSide(color: Colors.white, width: 2),
   ),
-  enabledBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.white),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(15),
+    borderSide: BorderSide(color: Colors.white, width: 2),
   ),
 );
 
@@ -32,14 +35,15 @@ InputDecoration kInputDecoration(txt) {
 InputDecoration kInputDecorationEdit(txt) {
   return InputDecoration(
     hintStyle: TextStyle(color: Colors.black),
+    contentPadding: EdgeInsets.all(15),
     hintText: txt,
-    fillColor: Colors.white.withOpacity(0.3),
+    fillColor: Colors.white.withOpacity(0.2),
     filled: true,
-    focusedBorder: UnderlineInputBorder(
+    focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.white),
     ),
     prefixStyle: TextStyle(color: Colors.white),
-    enabledBorder: UnderlineInputBorder(
+    enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.white),
     ),
   );

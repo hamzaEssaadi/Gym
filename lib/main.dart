@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym/const.dart';
 import 'package:gym/providers/participant.dart';
 import 'package:gym/screens/participants-screen.dart';
 import 'package:provider/provider.dart';
@@ -17,13 +18,6 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        /* theme: ThemeData(
-           textTheme: TextTheme(
-          headline: TextStyle(color: Colors.white),
-          title: TextStyle(color: Colors.white),
-          body1: TextStyle(color: Colors.white),
-        )
-        ),*/
         home: ParticipantsScreen(),
         routes: {
           EditParticipantScreen.routeName: (ctx) => EditParticipantScreen()

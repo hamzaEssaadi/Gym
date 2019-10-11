@@ -98,4 +98,27 @@ class Participants with ChangeNotifier {
       return -1;
     }
   }
+
+  Future<int> edit(Participant participant) async {
+    final path = url + 'participants/${participant.id}.json';
+    final response = await http.patch(path,
+        body: jsonEncode({
+          'name': participant.name,
+          'dateBegin': participant.dateBegin.toIso8601String(),
+          'dateEnd': participant.dateEnd.toIso8601String()
+        }));
+    print(response.body);
+    if (response.body.isEmpty) return 0;
+    try {
+      if (response.statusCode == 200) {
+        _items[_items.indexWhere((test) => test.id == participant.id)] =
+            participant;
+        notifyListeners();
+      }
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return 1;
+    }
+  }
 }

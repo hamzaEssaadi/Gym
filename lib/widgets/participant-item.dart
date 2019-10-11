@@ -20,11 +20,13 @@ class ParticipantItem extends StatelessWidget {
             child: ListTile(
               title: Text(
                 participant.name,
-                style: TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 'il rest ${participant.nbDaysRest()} jour${participant.nbDaysRest() > 1 ? 's' : ''}',
-                style: TextStyle(color: Colors.white),
+                style:
+                    TextStyle(color: Colors.white, fontStyle: FontStyle.italic),
               ),
               trailing: IconButton(
                 icon: Icon(

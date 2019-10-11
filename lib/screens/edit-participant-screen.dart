@@ -50,6 +50,12 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
             ? 'Mettre à jour un abonnement'
             : 'Ajouter un participant'),
         backgroundColor: KsecondColor,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: _save,
+          )
+        ],
       );
     }
     isInit = true;
@@ -184,9 +190,18 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                                 )
                               : MaterialButton(
                                   onPressed: _save,
-                                  child: Text(
-                                    "Enregistrer",
-                                    style: TextStyle(color: Colors.white),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.save,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        " Enregistrer",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
                                   color: KsecondColor,
                                   shape: RoundedRectangleBorder(
@@ -214,7 +229,16 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
         int status = await Provider.of<Participants>(context, listen: false)
             .add(participant);
         if (status == 200) {
-          showMsg('le participant été ajouté avec success');
+          showMsg('le participant été ajouté avec succès');
+          Navigator.of(context).pop();
+        } else {
+          showMsg('Une erreur est survenue');
+        }
+      } else {
+        int status = await Provider.of<Participants>(context, listen: false)
+            .edit(participant);
+        if (status == 200) {
+          showMsg('Le participant a été mis à jour avec succès');
           Navigator.of(context).pop();
         } else {
           showMsg('Une erreur est survenue');

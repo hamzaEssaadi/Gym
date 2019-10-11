@@ -21,7 +21,7 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
       setState(() {});
       int status =
           await Provider.of<Participants>(context, listen: false).fetchAndSet();
-
+      if (status != 200) showMsg('Une erreur est survenue');
       setState(() {
         isLoading = false;
       });
@@ -50,11 +50,21 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
             itemBuilder: (ctx) {
               var list = List<PopupMenuEntry<String>>();
               list.add(PopupMenuItem(
-                child: Text("Ajouter un participant"),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.add),
+                    Text(" Ajouter un participant"),
+                  ],
+                ),
                 value: 'add',
               ));
               list.add(PopupMenuItem(
-                child: Text("Logout"),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.exit_to_app),
+                    Text(" Logout"),
+                  ],
+                ),
                 value: 'logout',
               ));
               return list;
@@ -73,10 +83,6 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
   Widget build(BuildContext context) {
     var appBar = appBarr();
     final participantsM = Provider.of<Participants>(context);
-    // for (int i = 0; i < participantsM.items.length; i++)
-    //   print(participantsM.items[i].dateEnd.toString() +
-    //       ' ' +
-    //       participantsM.items[i].dateBegin.toString());
     final height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         appBar.preferredSize.height;
@@ -98,6 +104,8 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
                       children: <Widget>[
                         Container(
                           height: height * 0.1,
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           child: TextField(
                             decoration: kInputSearch,
                             style: TextStyle(color: Colors.white),
@@ -108,13 +116,20 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
                         ),
                         Container(
                           height: height * 0.9,
-                          child: ListView.builder(
-                            itemBuilder: (ctx, i) {
-                              final Participant participant =
-                                  participantsM.items[i];
-                              return ParticipantItem(participant);
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              int status = await participantsM.fetchAndSet();
+                              if (status != 200)
+                                showMsg('Une erreur est survenue');
                             },
-                            itemCount: participantsM.items.length,
+                            child: ListView.builder(
+                              itemBuilder: (ctx, i) {
+                                final Participant participant =
+                                    participantsM.items[i];
+                                return ParticipantItem(participant);
+                              },
+                              itemCount: participantsM.items.length,
+                            ),
                           ),
                         )
                       ],
