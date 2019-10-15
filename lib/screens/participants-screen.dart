@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym/const.dart';
+import 'package:gym/providers/auth.dart';
 import 'package:gym/providers/participant.dart';
 import 'package:gym/screens/edit-participant-screen.dart';
 import 'package:gym/screens/filtred-participants.dart';
@@ -69,10 +70,13 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
               ));
               return list;
             },
-            onSelected: (v) {
+            onSelected: (v) async {
               if (v == 'add') {
                 Navigator.of(context)
                     .pushNamed(EditParticipantScreen.routeName);
+              }
+              if (v == 'logout') {
+                await Provider.of<Auth>(context, listen: false).logout();
               }
             },
           )

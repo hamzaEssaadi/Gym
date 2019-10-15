@@ -26,6 +26,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
       months.add(DropdownMenuItem(
         child: Text(
           "$i moi${i > 1 ? 's' : ''}",
+          style: TextStyle(color: Colors.white),
         ),
         value: i,
       ));
@@ -85,7 +86,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                 width: double.infinity,
                 height: height * 0.3,
                 child: Icon(
-                  Icons.date_range,
+                  Icons.person,
                   size: 100,
                   color: Colors.white,
                 ),
@@ -101,6 +102,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                       child: ListView(
                         children: <Widget>[
                           TextFormField(
+                            style: TextStyle(color: Colors.white),
                             initialValue: participant.name == null
                                 ? null
                                 : participant.name,
@@ -132,6 +134,13 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                             height: 10,
                           ),
                           DateTimeField(
+                            style: TextStyle(
+                                color: Colors.white,
+                                decorationColor: Colors.white),
+                            resetIcon: Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                            ),
                             validator: (v) {
                               if (v.toString().isEmpty)
                                 return 'Veuillez entrer la date de début';
@@ -162,23 +171,24 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                             height: 10,
                           ),
                           DropdownButtonFormField(
-                              items: months(),
-                              onChanged: (v) {
-                                setState(() {
-                                  selectedValue = v;
-                                });
-                              },
-                              onSaved: (v) {
-                                participant = Participant(
-                                    id: participant.id,
-                                    name: participant.name,
-                                    dateBegin: participant.dateBegin,
-                                    dateEnd: participant.dateBegin.add(
-                                        Duration(days: selectedValue * 30)));
-                              },
-                              value: selectedValue,
-                              decoration:
-                                  kInputDecorationEdit('Le nombre des mois')),
+                            decoration: kInputDecorationEdit(
+                                'Le nombre des mois', 'dropdwn'),
+                            items: months(),
+                            onChanged: (v) {
+                              setState(() {
+                                selectedValue = v;
+                              });
+                            },
+                            onSaved: (v) {
+                              participant = Participant(
+                                  id: participant.id,
+                                  name: participant.name,
+                                  dateBegin: participant.dateBegin,
+                                  dateEnd: participant.dateBegin
+                                      .add(Duration(days: selectedValue * 30)));
+                            },
+                            value: selectedValue,
+                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -220,6 +230,7 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
 
   void _save() async {
     final bool validate = form.currentState.validate();
+
     if (validate) {
       form.currentState.save();
       setState(() {

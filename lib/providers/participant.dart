@@ -33,13 +33,16 @@ class Participants with ChangeNotifier {
     //     dateBegin: DateTime.parse("2019-10-09"),
     //     dateEnd: DateTime.parse("2020-02-09"))
   ];
+  final String token;
+
+  Participants({@required this.token});
 
   List<Participant> get items {
     return [..._items];
   }
 
   Future<int> fetchAndSet() async {
-    var path = url + '/participants.json';
+    var path = url + '/participants.json?auth=$token';
     try {
       var response = await http.get(path);
 
@@ -57,7 +60,8 @@ class Participants with ChangeNotifier {
         });
         _items = loadedItems;
         notifyListeners();
-      }
+      } else
+        print(response.body);
       return response.statusCode;
     } catch (e) {
       print('error' + e.toString());
@@ -73,7 +77,7 @@ class Participants with ChangeNotifier {
   }
 
   Future<int> add(Participant participant) async {
-    var path = url + '/participants.json';
+    var path = url + '/participants.json?auth=$token';
     try {
       var response = await http.post(path,
           body: json.encode({
@@ -100,7 +104,7 @@ class Participants with ChangeNotifier {
   }
 
   Future<int> edit(Participant participant) async {
-    final path = url + 'participants/${participant.id}.json';
+    final path = url + 'participants/${participant.id}.json?auth=$token';
     final response = await http.patch(path,
         body: jsonEncode({
           'name': participant.name,
@@ -114,7 +118,8 @@ class Participants with ChangeNotifier {
         _items[_items.indexWhere((test) => test.id == participant.id)] =
             participant;
         notifyListeners();
-      }
+      } else
+        print(response.body);
       return response.statusCode;
     } catch (e) {
       print(e.toString());
@@ -127,7 +132,7 @@ class Participants with ChangeNotifier {
     _items.removeWhere((test) => test.id == id);
     notifyListeners();
     try {
-      final path = url + 'participants/${participant.id}.json';
+      final path = url + 'participants/${participant.id}.json?auth=$token';
       var response = await http.delete(path);
       if (response.statusCode != 200) {
         _items.add(participant);
@@ -149,7 +154,6 @@ class Participants with ChangeNotifier {
   }
 
   List<Participant> passedParticipants() {
-    print(_items.where((test) => test.nbDaysRest() <= 0).toList().length);
     return _items.where((test) => test.nbDaysRest() <= 0).toList();
   }
 }
