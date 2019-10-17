@@ -170,24 +170,27 @@ class _EditParticipantScreenState extends State<EditParticipantScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          DropdownButtonFormField(
-                            decoration: kInputDecorationEdit(
-                                'Le nombre des mois', 'dropdwn'),
-                            items: months(),
-                            onChanged: (v) {
-                              setState(() {
-                                selectedValue = v;
-                              });
-                            },
-                            onSaved: (v) {
-                              participant = Participant(
-                                  id: participant.id,
-                                  name: participant.name,
-                                  dateBegin: participant.dateBegin,
-                                  dateEnd: participant.dateBegin
-                                      .add(Duration(days: selectedValue * 30)));
-                            },
-                            value: selectedValue,
+                          Theme(
+                            data: ThemeData(canvasColor: Colors.black),
+                            child: DropdownButtonFormField(
+                              decoration: kInputDecorationEdit(
+                                  'Le nombre des mois', 'dropdwn'),
+                              items: months(),
+                              onChanged: (v) {
+                                setState(() {
+                                  selectedValue = v;
+                                });
+                              },
+                              onSaved: (v) {
+                                participant = Participant(
+                                    id: participant.id,
+                                    name: participant.name,
+                                    dateBegin: participant.dateBegin,
+                                    dateEnd: participant.dateBegin.add(
+                                        Duration(days: selectedValue * 30)));
+                              },
+                              value: selectedValue,
+                            ),
                           ),
                           SizedBox(
                             height: 10,

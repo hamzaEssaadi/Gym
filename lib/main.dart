@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.orange,
           primaryColor: KmainColor,
           accentColor: KmainColor,
-          canvasColor: KmainColor.withOpacity(0.5),
+          //    canvasColor: Colors.yellow,
         ),
         routes: {
           EditParticipantScreen.routeName: (ctx) => EditParticipantScreen()

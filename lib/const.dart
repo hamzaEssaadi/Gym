@@ -37,31 +37,12 @@ InputDecoration kInputDecoration(txt) {
 InputDecoration kInputDecorationEdit(txt, [String type = null]) {
   return InputDecoration(
     hintStyle: TextStyle(color: Colors.white),
-    // suffixIcon: Icon(
-    //   Icons.expand_more,
-    //   color: Colors.white,
-    // ),
-    /* suffixIcon: type != null
-        ? Icon(
-            Icons.expand_more,
-            color: Colors.white,
-          )
-        : null,*/
     enabledBorder:
         UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
     focusedBorder:
         UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-    // contentPadding: EdgeInsets.all(15),
     hintText: txt,
-    //  fillColor: Colors.white.withOpacity(0.2),
-    // filled: true,
-    //focusedBorder: OutlineInputBorder(
-    //  borderSide: BorderSide(color: Colors.white),
-    //  ),
     prefixStyle: TextStyle(color: Colors.white),
-    // enabledBorder: OutlineInputBorder(
-    //  borderSide: BorderSide(color: Colors.white),
-    // ),
   );
 }
 
@@ -70,4 +51,24 @@ const url = 'https://gym-ba9b1.firebaseio.com/';
 void showMsg(txt) {
   Fluttertoast.showToast(
       msg: txt, gravity: ToastGravity.BOTTOM, toastLength: Toast.LENGTH_SHORT);
+}
+
+InputDecoration kInputDecorationLogin(txt, Icon icon) {
+  return InputDecoration(
+    suffixIcon: icon,
+    contentPadding: EdgeInsets.all(15),
+    labelText: txt,
+    enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: KmainColor, width: 3),
+        borderRadius: BorderRadius.circular(15)),
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: KmainColor, width: 3),
+        borderRadius: BorderRadius.circular(15)),
+        focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 3),
+        borderRadius: BorderRadius.circular(15)),
+    errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 3),
+        borderRadius: BorderRadius.circular(15)),
+  );
 }

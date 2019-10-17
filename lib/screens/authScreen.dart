@@ -13,51 +13,122 @@ class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
   bool istLoading = false;
   Map<String, String> userData = {'email': '', 'password': ''};
+
   @override
   Widget build(BuildContext context) {
+    final height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
         body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            height: 500,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.person,
-                  size: 150,
-                ),
-                Form(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(
+                    height: height * 0.40,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('images/top-image.png'),
+                            fit: BoxFit.fill)),
+                  ),
+                  Container(
+                      height: height * 0.6,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage('images/bottom.png'))))
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 40)],
+                    color: Colors.white),
+                height: height * 0.4,
+                width: 300,
+                child: Form(
                   key: _form,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      TextFormField(
-                        initialValue: 'hamza@test.com',
-                        decoration: InputDecoration(hintText: 'Email'),
-                        onSaved: (v) {
-                          userData['email'] = v;
-                        },
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 25),
+                            child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                onSaved: (v) {
+                                  userData['email'] = v;
+                                },
+                                validator: (v) {
+                                  if (v.isEmpty)
+                                    return 'Entrez une adresse mail s\'il vous plaît';
+                                },
+                                decoration: kInputDecorationLogin(
+                                    'Email',
+                                    Icon(
+                                      Icons.email,
+                                      color: KsecondColor,
+                                    ))),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextFormField(
+                              onSaved: (v) {
+                                userData['password'] = v;
+                              },
+                              obscureText: true,
+                              validator: (v) {
+                                if (v.isEmpty)
+                                  return 'Veuillez entrer un mot de passe';
+                              },
+                              decoration: kInputDecorationLogin(
+                                  'Mot de passe',
+                                  Icon(
+                                    Icons.lock,
+                                    color: KsecondColor,
+                                  )),
+                            ),
+                          )
+                        ],
                       ),
-                      TextFormField(
-                        initialValue: '123456',
-                        decoration: InputDecoration(hintText: 'Password'),
-                        onSaved: (v) {
-                          userData['password'] = v;
-                        },
-                      ),
-                      istLoading
-                          ? CircularProgressIndicator()
-                          : FlatButton(
-                              child: Text("Login"),
-                              onPressed: _save,
-                            )
+                      Container(
+                        height: 45,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [Color(0xffa3c9e2), Color(0xff8d6ad4)]),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                        ),
+                        child: MaterialButton(
+                          height: 45,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15))),
+                          onPressed: _save,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          //   color: Colors.blue,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
