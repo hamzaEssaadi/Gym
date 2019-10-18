@@ -12,12 +12,19 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _form = GlobalKey<FormState>();
   bool istLoading = false;
+  var height;
   Map<String, String> userData = {'email': '', 'password': ''};
-
+  double myHeight;
+  var isRun = false;
   @override
   Widget build(BuildContext context) {
-    final height =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    if (!isRun) {
+      height = MediaQuery.of(context).size.height -
+          MediaQuery.of(context).padding.top;
+      isRun = true;
+      myHeight = height * 0.4;
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey,
@@ -47,7 +54,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 40)],
                     color: Colors.white),
-                height: height * 0.4,
+                height: myHeight,
                 width: 300,
                 child: Form(
                   key: _form,
@@ -113,21 +120,25 @@ class _AuthScreenState extends State<AuthScreen> {
                                   bottomLeft: Radius.circular(15),
                                   bottomRight: Radius.circular(15))),
                           onPressed: _save,
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
+                          child: istLoading
+                              ? CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                )
+                              : Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
                           //   color: Colors.blue,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -137,9 +148,15 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _save() async {
     final validate = _form.currentState.validate();
-    if (validate) {
+    if (!validate) {
+      setState(() {
+        myHeight = height * 0.4 + 20;
+      });
+    } else {
+      setState(() {
+        myHeight = height * 0.4;
+      });
       _form.currentState.save();
-
       try {
         setState(() {
           istLoading = true;
